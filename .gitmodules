@@ -1,0 +1,7 @@
+[submodule "volumes/program/web"]
+	path = volumes/program/web
+	url = https://192.168.2.227:40443/gitlab/server/server_training_web
+	branch = master
+[submodule "volumes/program/socket"]
+	path = volumes/program/socket
+	url = https://192.168.2.227:40443/gitlab/server/server_training_socket

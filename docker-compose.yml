@@ -1,0 +1,39 @@
+# 公式リファレンス : https://docs.docker.com/compose/compose-file/
+# 日本語化プロジェクト（情報が古いため要注意） : http://docs.docker.jp/compose/compose-file.html
+version: '3.7'
+services:
+  # webサーバ
+  web:
+    container_name: ctr_web
+    hostname: host_web
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/web/Dockerfile
+    image: test_img_web
+    privileged: true
+    tty: true
+    volumes:
+      - ./volumes/program:/opt/project
+      - ./volumes/config/web/etc/httpd/conf/httpd.conf:/etc/httpd/conf/httpd.conf
+      - ./volumes/config/web/etc/httpd/conf.d/web00.conf:/etc/httpd/conf.d/web00.conf
+    ports:
+      - "22:22"
+      - "80:80"
+      - "443:443"
+      - "10007:10007"
+      - "10007:10007/udp"
+  db:
+    container_name: ctr_db
+    hostname: host_db00
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=test_user
+      - MYSQL_PASSWORD=test_user_password
+      - TZ=Asia/Tokyo
+    volumes:
+      - ./volumes/db/var/lib/mysql:/var/lib/mysql
+    # InnoDBの非同期ディスクI/Oが利用できない環境があるため無効化設定をする。
+    command: --innodb-use-native-aio=0
